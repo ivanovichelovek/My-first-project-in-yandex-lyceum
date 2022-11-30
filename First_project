@@ -1,0 +1,230 @@
+import sys
+import sqlite3
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QLabel, QWidget, QHBoxLayout, QRadioButton, \
+    QVBoxLayout, QComboBox, QApplication, QDialog, QInputDialog, QTableWidgetItem, QTableWidget, QSpinBox
+from PyQt5.QtCore import QRect
+from student_adding_project import Student_adding
+
+name = ''
+age = 0
+clas = ''
+Oge1 = 0
+Oge2 = 0
+Oge3 = 0
+Oge4 = 0
+Atestat = 0.0
+
+
+class Add_student(QDialog, Student_adding):
+    def __init__(self):
+        QDialog.__init__(self)
+        self.setupUi(self)
+        self.buttonBox.accepted.connect(self.adding)
+        self.buttonBox.rejected.connect(self.clos)
+
+    def adding(self):
+        if self.student_last_n_first_n_patr.text() == '' or self.age_of_the_student.value() == 0 or self.student_class.text() == '' or self.OGE_1.value() == 0 or self.OGE_2.value() == 0 or self.OGE_3.value() == 0 or self.OGE_4.value() == 0 or self.certificate == 0.0:
+            self.error_report.setText('Заполните все поля!')
+        else:
+            global name, age, clas, Oge1, Oge2, Oge3, Oge4, Atestat
+            name = self.student_last_n_first_n_patr.text()
+            age = self.age_of_the_student.value()
+            clas = self.student_class.text()
+            Oge1 = self.OGE_1.value()
+            Oge2 = self.OGE_2.value()
+            Oge3 = self.OGE_3.value()
+            Oge4 = self.OGE_4.value()
+            Atestat = self.certificate.value()
+            print(name, age, clas, Oge1, Oge2, Oge3, Oge4, Atestat, sep='\n')
+            self.close()
+
+    def clos(self):
+        self.close()
+
+
+class Example(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setGeometry(300, 300, 820, 560)
+        self.choices = []
+        self.add_student = QPushButton(self)
+        self.add_student.setGeometry(10, 10, 111, 31)
+        self.list_of_students_9_to_10 = QTableWidget(self)
+        self.list_of_students_9_to_10.setGeometry(180, 140, 441, 121)
+        self.list_of_students_10_last = QTableWidget(self)
+        self.list_of_students_10_last.setGeometry(180, 400, 441, 121)
+        self.list_of_students_10_previous = QTableWidget(self)
+        self.list_of_students_10_previous.setGeometry(180, 270, 441, 121)
+        self.btn_save_chart = QPushButton(self)
+        self.btn_save_chart.setGeometry(300, 10, 451, 31)
+        self.name_table_1 = QLabel(self)
+        self.name_table_1.setGeometry(10, 190, 161, 21)
+        self.name_table_2 = QLabel(self)
+        self.name_table_2.setGeometry(10, 320, 171, 21)
+        self.name_table3 = QLabel(self)
+        self.name_table3.setGeometry(10, 440, 241, 21)
+        self.kol_procents = QSpinBox(self)
+        self.kol_procents.setGeometry(10, 530, 800, 25)
+        self.kol_procents.setValue(0)
+        self.horizontalLayoutWidget = QWidget(self)
+        self.horizontalLayoutWidget.setGeometry(300, 50, 451, 41)
+        self.radio_btn_file_extention = QHBoxLayout(self.horizontalLayoutWidget)
+        self.radio_btn_file_extention.setContentsMargins(0, 0, 0, 0)
+        self.radio_btn_docx = QRadioButton(self.horizontalLayoutWidget)
+        self.radio_btn_docx.setChecked(False)
+        self.radio_btn_file_extention.addWidget(self.radio_btn_docx)
+        self.radio_btn_xlsx = QRadioButton(self.horizontalLayoutWidget)
+        self.radio_btn_xlsx.setChecked(False)
+        self.radio_btn_file_extention.addWidget(self.radio_btn_xlsx)
+        self.radio_btn_pptx = QRadioButton(self.horizontalLayoutWidget)
+        self.radio_btn_file_extention.addWidget(self.radio_btn_pptx)
+        self.save_chart_csv = QPushButton(self)
+        self.save_chart_csv.setGeometry(130, 10, 161, 31)
+        self.choise = QLabel(self)
+        self.choise.setGeometry(130, 40, 161, 21)
+        self.verticalLayoutWidget = QWidget(self)
+        self.verticalLayoutWidget.setGeometry(QRect(130, 60, 161, 42))
+        self.verticalLayout_8 = QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.seporator_semicolon = QRadioButton(self.verticalLayoutWidget)
+        self.verticalLayout_8.addWidget(self.seporator_semicolon)
+        self.seporator_comma = QRadioButton(self.verticalLayoutWidget)
+        self.verticalLayout_8.addWidget(self.seporator_comma)
+        self._error = QLabel(self)
+        self._error.setGeometry(QRect(375, 100, 451, 31))
+        self._error.setText("")
+        self.seporator_error = QLabel(self)
+        self.seporator_error.setGeometry(QRect(130, 100, 171, 31))
+        self.seporator_error.setText("")
+        self.main_errors_for_tables = QLabel(self)
+        self.main_errors_for_tables.setGeometry(QRect(10, 530, 741, 16))
+        self.main_errors_for_tables.setText("")
+        self.choice_for_sort_1 = QComboBox(self)
+        self.choice_for_sort_1.setGeometry(QRect(630, 190, 171, 22))
+        self.choices.append(self.choice_for_sort_1)
+        self.sort1 = QPushButton(self)
+        self.sort1.setGeometry(QRect(630, 230, 171, 23))
+        self.label = QLabel(self)
+        self.label.setGeometry(QRect(630, 150, 171, 21))
+        self.sort2 = QPushButton(self)
+        self.sort2.setGeometry(QRect(630, 360, 171, 23))
+        self.choice_for_sort_2 = QComboBox(self)
+        self.choice_for_sort_2.setGeometry(QRect(630, 320, 171, 22))
+        self.choices.append(self.choice_for_sort_2)
+        self.label_2 = QLabel(self)
+        self.label_2.setGeometry(630, 280, 171, 21)
+        self.sort3 = QPushButton(self)
+        self.sort3.setGeometry(630, 490, 171, 23)
+        self.choice_for_sort_3 = QComboBox(self)
+        self.choice_for_sort_3.setGeometry(630, 450, 171, 22)
+        self.choices.append(self.choice_for_sort_3)
+        self.label_3 = QLabel(self)
+        self.label_3.setGeometry(630, 410, 171, 21)
+        self.setWindowTitle("Нужно придумать название и проэкта(оно же является именем окна)")
+        self.add_student.setText("Добавить ученика")
+        self.btn_save_chart.setText("Сохранить диаграмму успеваемости учеников в классе в docx / xlsx / pptx документ")
+        self.name_table_1.setText("желающиe перейти в 10 класс")
+        self.name_table_2.setText("Ученики, прошедшие в 10 класс")
+        self.name_table3.setText("Резерв")
+        self.radio_btn_docx.setText("docx")
+        self.radio_btn_xlsx.setText("xlsx")
+        self.radio_btn_pptx.setText("pptx")
+        self.save_chart_csv.setText("Сохранить список в csv")
+        self.choise.setText("Выберите разделитель")
+        self.seporator_semicolon.setText(";")
+        self.seporator_comma.setText(",")
+        for i in self.choices:
+            i.addItem("ФИО ученика")
+            i.addItem("Возраст ученика")
+            i.addItem("Класс ученика")
+            i.addItem("Кол-во баллов за первый ОГЭ")
+            i.addItem("Кол-во баллов за второй ОГЭ")
+            i.addItem("Кол-во баллов за третий ОГЭ")
+            i.addItem("Кол-во баллов за четвёртый ОГЭ")
+            i.addItem("Средний годовой балл ученика")
+        self.sort1.setText("Отсортировать")
+        self.label.setText("Остортировать по")
+        self.sort2.setText("Отсортировать")
+        self.label_2.setText("Остортировать по")
+        self.sort3.setText("Отсортировать")
+        self.label_3.setText("Остортировать по")
+        self.btn_save_chart.clicked.connect(self.table_to_docx_xlsx_pptx)
+        self.save_chart_csv.clicked.connect(self.list_to_csv)
+        self.add_student.clicked.connect(self.adding)
+        self.tables = []
+        self.tables.append(self.list_of_students_9_to_10)
+        self.tables.append(self.list_of_students_10_last)
+        self.tables.append(self.list_of_students_10_previous)
+        self.list_of_students_9_to_10.setRowCount(0)
+        self.list_of_students_9_to_10.setColumnCount(9)
+        self.list_of_students_10_previous.setRowCount(0)
+        self.list_of_students_10_previous.setColumnCount(9)
+        self.list_of_students_10_last.setRowCount(0)
+        self.list_of_students_10_last.setColumnCount(9)
+        for i in self.tables:
+            i.setHorizontalHeaderLabels(["id", "name", "age", "class", "Oge_point1",
+                                         "Oge_point2", "Oge_point3", "Oge_point4",
+                                         "certificate_point"])
+        self.filling_tables()
+        self.main_function()
+        if (self.kol_procents.valueChanged() or self.tables[0].itemSelectionChanged()):
+            self.main_function()
+
+    def table_to_docx_xlsx_pptx(self):
+        if self.radio_btn_docx.isChecked():
+            name, ok_pressed = QInputDialog.getText(self, "Имя файла",
+                                                    "Введите имя файла")
+            if ok_pressed:
+                self._error.setText(f'Список успешно сохранён в файл {name}.docx')
+        elif self.radio_btn_xlsx.isChecked():
+            name, ok_pressed = QInputDialog.getText(self, "Имя файла",
+                                                    "Введите имя файла")
+            if ok_pressed:
+                self._error.setText(f'Список успешно сохранён в файл {name}.xlsx')
+        elif self.radio_btn_pptx.isChecked():
+            name, ok_pressed = QInputDialog.getText(self, "Имя файла",
+                                                    "Введите имя файла")
+            if ok_pressed:
+                self._error.setText(f'Список успешно сохранён в файл {name}.pptx')
+        else:
+            self._error.setText('Выберите тип файла, в который надо сохранить список')
+
+    def list_to_csv(self):
+        if self.seporator_comma.isChecked() or self.seporator_semicolon.isChecked():
+            name, ok_pressed = QInputDialog.getText(self, "Имя файла",
+                                                    "Введите имя файла")
+            if ok_pressed:
+                self.seporator_error.setText('Таблица успешно сохранена')
+        else:
+            self.seporator_error.setText('Выберите разделитель!')
+
+    def main_function(self):
+        glist = []
+        for i in range(self.tables[0].rowCount()):
+            for j in range(9):
+                glist.append(self.tables[0].item(i, j).text())
+
+
+    def filling_tables(self):
+        tables  = ["project_9_to_10.sqlite", "project_10_previous.sqlite", "project_10_last.sqlite"]
+        for i in tables:
+            con1 = sqlite3.connect(i)
+            res1 = con1.cursor().execute("SELECT * FROM Students").fetchall()
+            for i, row in enumerate(res1):
+                self.list_of_students_9_to_10.setRowCount(
+                    self.list_of_students_9_to_10.rowCount() + 1)
+                for j, elem in enumerate(row):
+                    self.list_of_students_9_to_10.setItem(
+                        i, j, QTableWidgetItem(str(elem)))
+
+    def adding(self):
+        add = Add_student()
+        add.show()
+        add.exec_()
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    mand = Example()
+    mand.show()
+    sys.exit(app.exec())
